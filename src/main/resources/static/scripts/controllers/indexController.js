@@ -132,12 +132,13 @@ const indexController = {
 
         const videoElements = videos.map(video => {
             return `
-               <li>
+               <li data-attr-video-id="${video.videoId}">
                    <h3>
                        ${video.title}
                        <button class="play-video" type="button" data-attr-video-id="${video.videoId}">Play</button>
                    </h3>
-                   <img class="video-cover" src="${video.coverUrl}" alt="${video.title}" />
+                   <img class="video-cover" id="video-cover-${video.videoId}" src="${video.coverUrl}" alt="${video.title}" />
+                   <div class="prism-player" id="video-player-${video.videoId}" style="display: none;"></div>
                    <ul>
                        <li>Description: ${video.description}</li>
                        <li>Duration: ${video.duration} sec</li>
@@ -164,10 +165,12 @@ const indexController = {
             return map;
         }, {});
 
-        const player = new Aliplayer({
-            id: 'video-player',
+        $(`#video-cover-${video.videoId}`).hide();
+        $(`#video-player-${video.videoId}`).show();
+        new Aliplayer({
+            id: `video-player-${video.videoId}`,
             width: '100%',
-            autoplay: false,
+            autoplay: true,
             source: JSON.stringify(source),
             cover: video.coverUrl
         });
