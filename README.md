@@ -81,3 +81,4 @@ TODO
 * [Spring Boot](https://spring.io/projects/spring-boot)
 * [JQuery](https://jquery.com/)
 * [JavaScript upload SDK](https://www.alibabacloud.com/help/doc-detail/51992.htm)
+* [Web player SDK](https://www.alibabacloud.com/help/doc-detail/51991.htm)
