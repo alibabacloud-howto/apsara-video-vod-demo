@@ -9,5 +9,26 @@
 <body>
 <h1>ApsaraVideo VOD Demo</h1>
 <p>Under construction.</p>
+
+<form action="#" method="post" id="upload-video-form">
+    <input id="upload-video-file" type="file"
+           accept=".3gp,.asf,.avi,.dat,.dv,.flv,.f4v,.gif,.m2t,.m4v,.mj2,.mjpeg,.mkv,.mov,.mp4,.mpe,.mpg,.mpeg,.mts,.ogg,.qt,.rm,.rmvb,.swf,.ts,.vob,.wmv,.webm"/>
+
+    <label>Title: <input id="upload-video-title" type="text" maxlength="200"></label>
+    <label>Description: <input id="upload-video-description" type="text" maxlength="2000"></label>
+
+    <button id="upload-video-submit" type="submit">Upload</button>
+
+    <p id="upload-video-status"></p>
+</form>
+
+<script src="vendors/aliyun-upload-sdk/lib/es6-promise.min.js"></script>
+<script src="vendors/aliyun-upload-sdk/lib/aliyun-oss-sdk-5.2.0.min.js"></script>
+<script src="vendors/aliyun-upload-sdk/aliyun-upload-sdk-1.4.0.min.js"></script>
+<script src="vendors/jquery/jquery-3.4.0.min.js"></script>
+<script src="scripts/model/VideoMetadata.js"></script>
+<script src="scripts/model/VideoUploadDestination.js"></script>
+<script src="scripts/services/videosService.js"></script>
+<script src="scripts/controllers/indexController.js"></script>
 </body>
 </html>

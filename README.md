@@ -74,4 +74,10 @@ apsaraVideoVod.templateGroupId=ID of your "multiple-sizes" template.
 ```
 > Note: You can obtain the region ID from [this page](https://www.alibabacloud.com/help/doc-detail/40654.htm).
 
+## Installation
+TODO
 
+## Credits
+* [Spring Boot](https://spring.io/projects/spring-boot)
+* [JQuery](https://jquery.com/)
+* [JavaScript upload SDK](https://www.alibabacloud.com/help/doc-detail/51992.htm)

@@ -45,6 +45,9 @@ public class VideosController {
      */
     @RequestMapping(value = "/videos/prepare-upload", method = RequestMethod.POST)
     public ResponseEntity<VideoUploadDestination> prepareVideoUpload(@RequestBody VideoMetadata videoMetadata) {
+        LOGGER.info("Prepare upload for the video: " + videoMetadata.getTitle() +
+                " (file name = " + videoMetadata.getFileName() + ")...");
+
         DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessKeySecret);
         var client = new DefaultAcsClient(profile);
 
