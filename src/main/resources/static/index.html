@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
     <title>ApsaraVideo VOD Demo</title>
+
+    <link rel="stylesheet" href="css/index.css"/>
 </head>
 <body>
 <h1>ApsaraVideo VOD Demo</h1>
-<p>Under construction.</p>
 
+<h2>Video upload</h2>
 <form action="#" method="post" id="upload-video-form">
     <input id="upload-video-file" type="file"
            accept=".3gp,.asf,.avi,.dat,.dv,.flv,.f4v,.gif,.m2t,.m4v,.mj2,.mjpeg,.mkv,.mov,.mp4,.mpe,.mpg,.mpeg,.mts,.ogg,.qt,.rm,.rmvb,.swf,.ts,.vob,.wmv,.webm"/>
@@ -22,10 +24,19 @@
     <p id="upload-video-status"></p>
 </form>
 
+<h2>
+    Uploaded videos
+    <button id="refresh-videos" type="button">Refresh</button>
+</h2>
+<ul id="videos">
+    <li>Click on the "Refresh" button.</li>
+</ul>
+
 <script src="vendors/aliyun-upload-sdk/lib/es6-promise.min.js"></script>
 <script src="vendors/aliyun-upload-sdk/lib/aliyun-oss-sdk-5.2.0.min.js"></script>
 <script src="vendors/aliyun-upload-sdk/aliyun-upload-sdk-1.4.0.min.js"></script>
 <script src="vendors/jquery/jquery-3.4.0.min.js"></script>
+<script src="scripts/model/UploadableVideoMetadata.js"></script>
 <script src="scripts/model/VideoMetadata.js"></script>
 <script src="scripts/model/VideoUploadDestination.js"></script>
 <script src="scripts/services/videosService.js"></script>

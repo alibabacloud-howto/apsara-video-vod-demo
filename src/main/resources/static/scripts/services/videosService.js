@@ -8,7 +8,7 @@ const videosService = {
     /**
      * Request an upload address for the given video.
      *
-     * @param {VideoMetadata} videoMetadata
+     * @param {UploadableVideoMetadata} videoMetadata
      * @returns {Promise<VideoUploadDestination>}
      */
     async prepareVideoUpload(videoMetadata) {
@@ -86,6 +86,31 @@ const videosService = {
             uploader.addFile(file, null, null, null, '{}');
             uploader.startUpload();
         });
-    }
+    },
 
+    /**
+     * Find the 100 last uploaded videos.
+     *
+     * @returns {Promise<VideoMetadata[]>}
+     */
+    async findAllVideos() {
+        const response = await fetch('/videos', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        /** @type {Array} */ const responseBody = await response.json();
+        return responseBody.map(item => new VideoMetadata(
+            item.videoId,
+            item.title,
+            item.description,
+            item.status,
+            item.duration,
+            item.creationTime,
+            item.coverUrl,
+            item.snapshots));
+    }
 };

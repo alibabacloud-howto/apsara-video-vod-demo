@@ -24,6 +24,11 @@ const indexController = {
             this.onVideoUpload();
             return false;
         });
+
+        $('#refresh-videos').on('click', () => {
+            this.refreshUploadedVideos();
+            return false;
+        });
     },
 
     /**
@@ -76,7 +81,7 @@ const indexController = {
         $title.prop('disabled', true);
         $title.prop('disabled', true);
         $description.prop('disabled', true);
-        const videoMetadata = new VideoMetadata(title, this._selectedFile.name, this._selectedFile.size, description);
+        const videoMetadata = new UploadableVideoMetadata(title, this._selectedFile.name, this._selectedFile.size, description);
         const videoUploadDestination = await videosService.prepareVideoUpload(videoMetadata);
 
         // Upload the video
@@ -94,9 +99,39 @@ const indexController = {
         $title.prop('disabled', false);
         $title.prop('disabled', false);
         $description.prop('disabled', false);
+    },
+
+    /**
+     * Load and display the uploaded videos.
+     */
+    async refreshUploadedVideos() {
+        const $videos = $('#videos');
+
+        // Load the videos
+        $videos.html('<li>Loading...</li>');
+        const videoMetadatas = await videosService.findAllVideos();
+
+        // Display the videos
+        if (videoMetadatas.length === 0) {
+            $videos.html('<li>No video.</li>');
+            return;
+        }
+
+        const videoElements = videoMetadatas.map(video => {
+            return `
+               <li data-attr-video-id="${video.videoId}">
+                   <h3>${video.title}</h3>
+                   <img class="video-cover" src="${video.coverUrl}" alt="${video.title}" />
+                   <ul>
+                       <li>Description: ${video.description}</li>
+                       <li>Duration: ${video.duration} sec</li>
+                       <li>Status: ${video.status}</li>
+                       <li>Creation time: ${video.creationTime}</li>
+                   </ul>
+               </li>`;
+        });
+        $videos.html(videoElements.join(''));
     }
-
-
 };
 
 $(document).ready(() => indexController.onDocumentReady());
