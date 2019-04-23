@@ -1,21 +1,21 @@
 package com.alibaba.intl.voddemo.models;
 
 /**
- * Metadata about a video file to upload.
+ * Video to upload.
  *
  * @author Alibaba Cloud
  */
-public class UploadableVideoMetadata {
+public class UploadableVideo {
 
     private String title;
     private String fileName;
     private long fileSize; // In bytes
     private String description;
 
-    public UploadableVideoMetadata() {
+    public UploadableVideo() {
     }
 
-    public UploadableVideoMetadata(String title, String fileName, long fileSize, String description) {
+    public UploadableVideo(String title, String fileName, long fileSize, String description) {
         this.title = title;
         this.fileName = fileName;
         this.fileSize = fileSize;
@@ -56,7 +56,7 @@ public class UploadableVideoMetadata {
 
     @Override
     public String toString() {
-        return "UploadableVideoMetadata{" +
+        return "UploadableVideo{" +
                 "title='" + title + '\'' +
                 ", fileName='" + fileName + '\'' +
                 ", fileSize=" + fileSize +

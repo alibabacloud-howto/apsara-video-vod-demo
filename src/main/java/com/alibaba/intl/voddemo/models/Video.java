@@ -3,11 +3,11 @@ package com.alibaba.intl.voddemo.models;
 import java.util.List;
 
 /**
- * Metadata about an uploaded video file.
+ * Uploaded video file.
  *
  * @author Alibaba Cloud
  */
-public class VideoMetadata {
+public class Video {
 
     private String videoId;
     private String title;
@@ -18,11 +18,11 @@ public class VideoMetadata {
     private String coverUrl;
     private List<String> snapshots;
 
-    public VideoMetadata() {
+    public Video() {
     }
 
-    public VideoMetadata(String videoId, String title, String description, String status, Float duration,
-                         String creationTime, String coverUrl, List<String> snapshots) {
+    public Video(String videoId, String title, String description, String status, Float duration,
+                 String creationTime, String coverUrl, List<String> snapshots) {
         this.videoId = videoId;
         this.title = title;
         this.description = description;
@@ -99,7 +99,7 @@ public class VideoMetadata {
 
     @Override
     public String toString() {
-        return "VideoMetadata{" +
+        return "Video{" +
                 "videoId='" + videoId + '\'' +
                 ", title='" + title + '\'' +
                 '}';

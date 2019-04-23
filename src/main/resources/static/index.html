@@ -7,9 +7,12 @@
     <title>ApsaraVideo VOD Demo</title>
 
     <link rel="stylesheet" href="css/index.css"/>
+    <link rel="stylesheet" href="//g.alicdn.com/de/prismplayer/2.7.1/skins/default/aliplayer-min.css"/>
 </head>
 <body>
 <h1>ApsaraVideo VOD Demo</h1>
+
+<div class="prism-player" id="video-player"></div>
 
 <h2>Video upload</h2>
 <form action="#" method="post" id="upload-video-form">
@@ -32,12 +35,14 @@
     <li>Click on the "Refresh" button.</li>
 </ul>
 
+<script charset="utf-8" type="text/javascript" src="//g.alicdn.com/de/prismplayer/2.7.1/aliplayer-h5-min.js"></script>
 <script src="vendors/aliyun-upload-sdk/lib/es6-promise.min.js"></script>
 <script src="vendors/aliyun-upload-sdk/lib/aliyun-oss-sdk-5.2.0.min.js"></script>
 <script src="vendors/aliyun-upload-sdk/aliyun-upload-sdk-1.4.0.min.js"></script>
 <script src="vendors/jquery/jquery-3.4.0.min.js"></script>
-<script src="scripts/model/UploadableVideoMetadata.js"></script>
-<script src="scripts/model/VideoMetadata.js"></script>
+<script src="scripts/model/UploadableVideo.js"></script>
+<script src="scripts/model/Video.js"></script>
+<script src="scripts/model/VideoPlayUrl.js"></script>
 <script src="scripts/model/VideoUploadDestination.js"></script>
 <script src="scripts/services/videosService.js"></script>
 <script src="scripts/controllers/indexController.js"></script>

@@ -8,11 +8,11 @@ const videosService = {
     /**
      * Request an upload address for the given video.
      *
-     * @param {UploadableVideoMetadata} videoMetadata
+     * @param {UploadableVideo} uploadableVideo
      * @returns {Promise<VideoUploadDestination>}
      */
-    async prepareVideoUpload(videoMetadata) {
-        console.log(`Prepare upload for the video: ${videoMetadata.title} (file name ${videoMetadata.fileName})...`);
+    async prepareVideoUpload(uploadableVideo) {
+        console.log(`Prepare upload for the video: ${uploadableVideo.title} (file name ${uploadableVideo.fileName})...`);
 
         const response = await fetch('/videos/prepare-upload', {
             method: 'POST',
@@ -20,7 +20,7 @@ const videosService = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(videoMetadata)
+            body: JSON.stringify(uploadableVideo)
         });
 
         if (response.status !== 200) {
@@ -91,7 +91,7 @@ const videosService = {
     /**
      * Find the 100 last uploaded videos.
      *
-     * @returns {Promise<VideoMetadata[]>}
+     * @returns {Promise<Video[]>}
      */
     async findAllVideos() {
         const response = await fetch('/videos', {
@@ -103,7 +103,7 @@ const videosService = {
         });
 
         /** @type {Array} */ const responseBody = await response.json();
-        return responseBody.map(item => new VideoMetadata(
+        return responseBody.map(item => new Video(
             item.videoId,
             item.title,
             item.description,
@@ -112,5 +112,24 @@ const videosService = {
             item.creationTime,
             item.coverUrl,
             item.snapshots));
+    },
+
+    /**
+     * Get URLs to play the video.
+     *
+     * @param {string} videoId ID of the video to play.
+     * @returns {Promise<VideoPlayUrl[]>}
+     */
+    async getVideoPlayUrls(videoId) {
+        const response = await fetch(`/videos/${videoId}/play-urls`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        /** @type {Array} */ const responseBody = await response.json();
+        return responseBody.map(item => new VideoPlayUrl(item.definition, item.playUrl));
     }
 };

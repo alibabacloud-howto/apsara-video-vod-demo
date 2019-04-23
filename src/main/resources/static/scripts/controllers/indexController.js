@@ -11,6 +11,11 @@ const indexController = {
     _selectedFile: null,
 
     /**
+     * @type {Video[]}
+     */
+    _videos: [],
+
+    /**
      * Method called when the index page is completely loaded.
      */
     onDocumentReady() {
@@ -28,6 +33,13 @@ const indexController = {
         $('#refresh-videos').on('click', () => {
             this.refreshUploadedVideos();
             return false;
+        });
+
+        $('#videos').on('click', event => {
+            const $target = $(event.target);
+            if ($target.hasClass('play-video')) {
+                this.playVideo($target.attr('data-attr-video-id'));
+            }
         });
     },
 
@@ -81,8 +93,8 @@ const indexController = {
         $title.prop('disabled', true);
         $title.prop('disabled', true);
         $description.prop('disabled', true);
-        const videoMetadata = new UploadableVideoMetadata(title, this._selectedFile.name, this._selectedFile.size, description);
-        const videoUploadDestination = await videosService.prepareVideoUpload(videoMetadata);
+        const uploadableVideo = new UploadableVideo(title, this._selectedFile.name, this._selectedFile.size, description);
+        const videoUploadDestination = await videosService.prepareVideoUpload(uploadableVideo);
 
         // Upload the video
         await videosService.uploadVideo(videoUploadDestination, this._selectedFile, progressPercentage => {
@@ -109,18 +121,22 @@ const indexController = {
 
         // Load the videos
         $videos.html('<li>Loading...</li>');
-        const videoMetadatas = await videosService.findAllVideos();
+        const videos = await videosService.findAllVideos();
+        this._videos = videos;
 
         // Display the videos
-        if (videoMetadatas.length === 0) {
+        if (videos.length === 0) {
             $videos.html('<li>No video.</li>');
             return;
         }
 
-        const videoElements = videoMetadatas.map(video => {
+        const videoElements = videos.map(video => {
             return `
-               <li data-attr-video-id="${video.videoId}">
-                   <h3>${video.title}</h3>
+               <li>
+                   <h3>
+                       ${video.title}
+                       <button class="play-video" type="button" data-attr-video-id="${video.videoId}">Play</button>
+                   </h3>
                    <img class="video-cover" src="${video.coverUrl}" alt="${video.title}" />
                    <ul>
                        <li>Description: ${video.description}</li>
@@ -131,6 +147,30 @@ const indexController = {
                </li>`;
         });
         $videos.html(videoElements.join(''));
+    },
+
+    /**
+     * Play the video with the given ID.
+     *
+     * @param {string} videoId
+     */
+    async playVideo(videoId) {
+        const index = this._videos.findIndex(video => video.videoId === videoId);
+        const video = this._videos[index];
+
+        const playUrls = await videosService.getVideoPlayUrls(video.videoId);
+        const source = playUrls.reduce((map, obj) => {
+            map[obj.definition] = obj.playUrl;
+            return map;
+        }, {});
+
+        const player = new Aliplayer({
+            id: 'video-player',
+            width: '100%',
+            autoplay: false,
+            source: JSON.stringify(source),
+            cover: video.coverUrl
+        });
     }
 };
 

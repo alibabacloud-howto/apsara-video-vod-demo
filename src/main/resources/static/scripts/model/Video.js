@@ -1,9 +1,9 @@
 /**
- * Metadata about an uploaded video file.
+ * Uploaded video file.
  *
  * @author Alibaba Cloud
  */
-class VideoMetadata {
+class Video {
 
     /**
      * @param {string} videoId

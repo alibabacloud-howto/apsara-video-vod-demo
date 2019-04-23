@@ -1,22 +1,21 @@
 package com.alibaba.intl.voddemo.controllers;
 
-import com.alibaba.intl.voddemo.models.UploadableVideoMetadata;
-import com.alibaba.intl.voddemo.models.VideoMetadata;
+import com.alibaba.intl.voddemo.models.UploadableVideo;
+import com.alibaba.intl.voddemo.models.Video;
+import com.alibaba.intl.voddemo.models.VideoPlayUrl;
 import com.alibaba.intl.voddemo.models.VideoUploadDestination;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.vod.model.v20170321.CreateUploadVideoRequest;
+import com.aliyuncs.vod.model.v20170321.GetPlayInfoRequest;
 import com.aliyuncs.vod.model.v20170321.GetVideoListRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,20 +45,20 @@ public class VideosController {
     /**
      * Request an upload address for the given video.
      *
-     * @param uploadableVideoMetadata Information about the video to upload.
+     * @param uploadableVideo Information about the video to upload.
      * @return Information about where to upload the video.
      */
     @RequestMapping(value = "/videos/prepare-upload", method = RequestMethod.POST)
-    public ResponseEntity<VideoUploadDestination> prepareVideoUpload(@RequestBody UploadableVideoMetadata uploadableVideoMetadata) {
-        LOGGER.info("Prepare upload for the video: " + uploadableVideoMetadata.getTitle() +
-                " (file name = " + uploadableVideoMetadata.getFileName() + ")...");
+    public ResponseEntity<VideoUploadDestination> prepareVideoUpload(@RequestBody UploadableVideo uploadableVideo) {
+        LOGGER.info("Prepare upload for the video: " + uploadableVideo.getTitle() +
+                " (file name = " + uploadableVideo.getFileName() + ")...");
 
         var client = new DefaultAcsClient(clientProfile);
         var request = new CreateUploadVideoRequest();
-        request.setTitle(uploadableVideoMetadata.getTitle());
-        request.setFileName(uploadableVideoMetadata.getFileName());
-        request.setFileSize(uploadableVideoMetadata.getFileSize());
-        request.setDescription(uploadableVideoMetadata.getDescription());
+        request.setTitle(uploadableVideo.getTitle());
+        request.setFileName(uploadableVideo.getFileName());
+        request.setFileSize(uploadableVideo.getFileSize());
+        request.setDescription(uploadableVideo.getDescription());
         request.setTemplateGroupId(templateGroupId);
 
         try {
@@ -77,7 +76,7 @@ public class VideosController {
      * @return 100 last uploaded videos.
      */
     @RequestMapping("/videos")
-    public ResponseEntity<List<VideoMetadata>> findAllVideos() {
+    public ResponseEntity<List<Video>> findAllVideos() {
         LOGGER.info("Finding the last 100 videos...");
 
         var client = new DefaultAcsClient(clientProfile);
@@ -90,8 +89,8 @@ public class VideosController {
                 return ResponseEntity.ok(Collections.emptyList());
             }
 
-            var videoMetadatas = response.getVideoList().stream()
-                    .map(video -> new VideoMetadata(
+            var videos = response.getVideoList().stream()
+                    .map(video -> new Video(
                             video.getVideoId(),
                             video.getTitle(),
                             video.getDescription(),
@@ -101,9 +100,38 @@ public class VideosController {
                             video.getCoverURL(),
                             video.getSnapshots()))
                     .collect(Collectors.toList());
-            return ResponseEntity.ok(videoMetadatas);
+            return ResponseEntity.ok(videos);
         } catch (ClientException e) {
             LOGGER.warn("Unable to find the 100 last videos: " + e.getMessage(), e);
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    /**
+     * @param videoId ID of the video to play.
+     * @return URLs to play the video.
+     */
+    @RequestMapping("/videos/{videoId}/play-urls")
+    public ResponseEntity<List<VideoPlayUrl>> getVideoPlayUrls(@PathVariable("videoId") String videoId) {
+        LOGGER.info("Get play URLs for the video " + videoId + "...");
+
+        var client = new DefaultAcsClient(clientProfile);
+        var request = new GetPlayInfoRequest();
+        request.setVideoId(videoId);
+
+        try {
+            var response = client.getAcsResponse(request);
+
+            if (response.getPlayInfoList() == null || response.getPlayInfoList().isEmpty()) {
+                return ResponseEntity.ok(Collections.emptyList());
+            }
+
+            var videoPlayUrls = response.getPlayInfoList().stream()
+                    .map(info -> new VideoPlayUrl(info.getDefinition(), info.getPlayURL()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(videoPlayUrls);
+        } catch (ClientException e) {
+            LOGGER.warn("Unable to get play URLs for the video " + videoId + ": " + e.getMessage(), e);
             return ResponseEntity.badRequest().body(null);
         }
     }
