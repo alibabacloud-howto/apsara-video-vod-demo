@@ -158,7 +158,7 @@ terraform apply
 The Terraform script automatically installs the demo on the [ECS instance](https://www.alibabacloud.com/product/ecs).
 
 You can now test your application by opening your web browser on the domain you have configured
-(e.g. "http://demo-vod.my-sample-domain.xyz").
+(e.g. "http://vod-demo.my-sample-domain.xyz").
 
 ## Credits
 * [OpenJDK](https://openjdk.java.net/)
