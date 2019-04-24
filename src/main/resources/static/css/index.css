@@ -1,3 +1,20 @@
 .video-cover {
     height: 240px;
 }
+
+.video-cover-container {
+    height: 240px;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.delete-video {
+    float: right;
+}
+
+.video-description {
+    height: 3em;
+    overflow-y: auto;
+}

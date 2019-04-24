@@ -95,7 +95,7 @@ public class VideosController {
                     .map(video -> new Video(
                             video.getVideoId(),
                             video.getTitle(),
-                            video.getDescription(),
+                            video.getDescription() == null ? "" : video.getDescription(),
                             video.getStatus(),
                             video.getDuration(),
                             video.getCreationTime(),

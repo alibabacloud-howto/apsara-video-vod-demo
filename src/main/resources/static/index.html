@@ -36,17 +36,17 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container mt-3">
     <div class="row">
         <div class="col-md-12">
             <h2>
-                Uploaded videos
-                <button id="refresh-videos" type="button">Refresh</button>
+                <span id="title-nb-videos"></span> Videos
+                <button id="refresh-videos" type="button" class="btn btn-primary ml-3">Refresh</button>
             </h2>
-            <ul id="videos">
-                <li>Click on the "Refresh" button.</li>
-            </ul>
         </div>
+    </div>
+    <div class="row" id="videos">
+        <div class="col-md-12 text-info">Loading...</div>
     </div>
 </div>
 

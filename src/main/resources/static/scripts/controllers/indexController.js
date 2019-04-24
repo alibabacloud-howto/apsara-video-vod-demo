@@ -52,6 +52,8 @@ const indexController = {
                 this.deleteVideo($target.attr('data-attr-video-id'));
             }
         });
+
+        this.refreshUploadedVideos();
     },
 
     resetUploadForm() {
@@ -153,35 +155,41 @@ const indexController = {
         const $videos = $('#videos');
 
         // Load the videos
-        $videos.html('<li>Loading...</li>');
+        $videos.html('<div class="col-md-12 text-info">Loading...</div>');
         const videos = await videosService.findAllVideos();
         this._videos = videos;
 
         // Display the videos
         if (videos.length === 0) {
-            $videos.html('<li>No video.</li>');
+            $videos.html('<div class="col-md-12 text-info">No video.</div>');
             return;
         }
 
         const videoElements = videos.map(video => {
+            const description = video.description || 'No description.';
             return `
-               <li data-attr-video-id="${video.videoId}">
-                   <h3>
+               <div class="col-md-4 mt-3" data-attr-video-id="${video.videoId}">
+                   <div class="video-cover-container">
+                       <img class="video-cover img-fluid m-auto play-video" data-attr-video-id="${video.videoId}"
+                            id="video-cover-${video.videoId}" src="${video.coverUrl}" alt="${video.title}"/>
+                       <div class="prism-player img-fluid m-auto" 
+                            id="video-player-${video.videoId}" style="display: none;"></div>
+                   </div>
+                   <h5 class="mt-2 pl-1 pr-1">
                        ${video.title}
-                       <button class="play-video" type="button" data-attr-video-id="${video.videoId}">Play</button>
-                       <button class="delete-video" type="button" data-attr-video-id="${video.videoId}">Delete</button>
-                   </h3>
-                   <img class="video-cover" id="video-cover-${video.videoId}" src="${video.coverUrl}" alt="${video.title}" />
-                   <div class="prism-player" id="video-player-${video.videoId}" style="display: none;"></div>
-                   <ul>
-                       <li>Description: ${video.description}</li>
-                       <li>Duration: ${video.duration} sec</li>
-                       <li>Status: ${video.status}</li>
-                       <li>Creation time: ${video.creationTime}</li>
-                   </ul>
-               </li>`;
+                       <button class="delete-video btn btn-primary btn-sm" type="button" data-attr-video-id="${video.videoId}">
+                           Delete
+                       </button>
+                   </h5>
+                   <span class="badge badge-light">Duration: ${Math.round(video.duration)} sec</span>
+                   <span class="badge badge-light">Status: ${video.status}</span>
+                   <span class="badge badge-light">Date: ${video.creationTime.substr(0, 10)}</span>
+                   <p class="mt-2 mb-2 pl-1 pr-1 video-description">${description}</p>
+               </div>`;
         });
         $videos.html(videoElements.join(''));
+
+        $('#title-nb-videos').text(videoElements.length);
     },
 
     /**
@@ -204,6 +212,7 @@ const indexController = {
         new Aliplayer({
             id: `video-player-${video.videoId}`,
             width: '100%',
+            height: '240px',
             autoplay: true,
             source: JSON.stringify(source),
             cover: video.coverUrl
