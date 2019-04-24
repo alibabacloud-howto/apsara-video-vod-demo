@@ -37,8 +37,11 @@ const indexController = {
 
         $('#videos').on('click', event => {
             const $target = $(event.target);
+
             if ($target.hasClass('play-video')) {
                 this.playVideo($target.attr('data-attr-video-id'));
+            } else if ($target.hasClass('delete-video')) {
+                this.deleteVideo($target.attr('data-attr-video-id'));
             }
         });
     },
@@ -136,6 +139,7 @@ const indexController = {
                    <h3>
                        ${video.title}
                        <button class="play-video" type="button" data-attr-video-id="${video.videoId}">Play</button>
+                       <button class="delete-video" type="button" data-attr-video-id="${video.videoId}">Delete</button>
                    </h3>
                    <img class="video-cover" id="video-cover-${video.videoId}" src="${video.coverUrl}" alt="${video.title}" />
                    <div class="prism-player" id="video-player-${video.videoId}" style="display: none;"></div>
@@ -174,6 +178,19 @@ const indexController = {
             source: JSON.stringify(source),
             cover: video.coverUrl
         });
+    },
+
+    async deleteVideo(videoId) {
+        const response = confirm("Are you sure you want to delete this video?");
+        if (response) {
+            try {
+                await videosService.deleteVideoById(videoId);
+            } catch (error) {
+                return alert(`Unable to delete this video! (error = ${JSON.stringify(error)})`);
+            }
+
+            await this.refreshUploadedVideos();
+        }
     }
 };
 

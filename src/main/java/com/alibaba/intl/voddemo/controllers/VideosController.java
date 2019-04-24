@@ -9,11 +9,13 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.aliyuncs.vod.model.v20170321.CreateUploadVideoRequest;
+import com.aliyuncs.vod.model.v20170321.DeleteVideoRequest;
 import com.aliyuncs.vod.model.v20170321.GetPlayInfoRequest;
 import com.aliyuncs.vod.model.v20170321.GetVideoListRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -133,6 +135,30 @@ public class VideosController {
         } catch (ClientException e) {
             LOGGER.warn("Unable to get play URLs for the video " + videoId + ": " + e.getMessage(), e);
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    /**
+     * Delete the video with the given ID.
+     *
+     * @param videoId ID of the video to delete.
+     * @return {@link HttpStatus#OK} if the video is deleted, {@link HttpStatus#BAD_REQUEST} if the video cannot be deleted.
+     */
+    @RequestMapping(value = "/videos/{videoId}", method = RequestMethod.DELETE)
+    public HttpStatus deleteVideoById(@PathVariable("videoId") String videoId) {
+        LOGGER.info("Delete the video " + videoId + "...");
+
+        var client = new DefaultAcsClient(clientProfile);
+        var request = new DeleteVideoRequest();
+        request.setVideoIds(videoId);
+
+        try {
+            client.getAcsResponse(request);
+            return HttpStatus.OK;
+
+        } catch (ClientException e) {
+            LOGGER.warn("Unable to delete the video " + videoId + ": " + e.getMessage(), e);
+            return HttpStatus.BAD_REQUEST;
         }
     }
 }

@@ -131,5 +131,21 @@ const videosService = {
 
         /** @type {Array} */ const responseBody = await response.json();
         return responseBody.map(item => new VideoPlayUrl(item.definition, item.playUrl));
+    },
+
+    /**
+     * Delete the video with the given ID.
+     *
+     * @param videoId ID of the video to delete.
+     * @returns {Promise<void>}
+     */
+    async deleteVideoById(videoId) {
+        await fetch(`/videos/${videoId}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
     }
 };
