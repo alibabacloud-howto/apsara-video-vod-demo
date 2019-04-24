@@ -139,13 +139,13 @@ cd ~/projects/vod-demo
 cd infrastructure
 
 # Configure the Terraform scripts
-export ALICLOUD_ACCESS_KEY="your-access-key-id"
-export ALICLOUD_SECRET_KEY="your-access-key-secret"
-export ALICLOUD_REGION="your-region-id" # e.g. "ap-southeast-1"
+export ALICLOUD_ACCESS_KEY="Access key ID attached to an administrator."
+export ALICLOUD_SECRET_KEY="Access key secret attached to an administrator."
+export ALICLOUD_REGION="Region ID (e.g. ap-southeast-1)"
 
-export TF_VAR_top_domain_name="my-sample-domain.xyz"
-export TF_VAR_sub_domain_name="vod-demo"
-export TF_VAR_ecs_root_password="YourS3cretP@ssword"
+export TF_VAR_top_domain_name="The top domain you have registered in Alibaba Cloud (e.g. my-sample-domain.xyz)."
+export TF_VAR_sub_domain_name="Sub domain name for this demo (e.g. vod-demo)."
+export TF_VAR_ecs_root_password="Root password of the ECS instance (e.g. YourS3cretP@ssword)."
 export TF_VAR_vod_service_access_key_id="Access key ID of your RAM user with the AliyunVoDFullAccess policy."
 export TF_VAR_vod_service_access_key_secret="Access key secret of your RAM user with the AliyunVoDFullAccess policy."
 export TF_VAR_vod_service_region_id="Region of the VOD service (e.g. ap-southeast-1)."
