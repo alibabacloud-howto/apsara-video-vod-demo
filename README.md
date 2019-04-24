@@ -1,5 +1,14 @@
 # ApsaraVideo VOD demo
 
+## Summary
+1. [Introduction](#introduction)
+2. [Prerequisites](#prerequisites)
+3. [ApsaraVideo VOD Configuration](#apsaravideo-vod-configuration)
+4. [Compilation](#compilation)
+5. [Installation](#installation)
+6. [Credits](#credits)
+7. [Support](#support)
+
 ## Introduction
 The goal of this demo is to demonstrate how to use
 [ApsaraVideo VOD](https://www.alibabacloud.com/products/apsaravideo-for-vod) with a simple web application written
@@ -17,7 +26,7 @@ Because we need to use CDNs, a domain is mandatory. We can either [buy one](http
 technically possible to use another domain registrar, but to make things simpler this demo expects a domain
 registered in Alibaba Cloud.
 
-## Configuration
+## ApsaraVideo VOD Configuration
 Let's start with the domain configuration:
 * Go to the [VOD console](https://vod.console.aliyun.com/).
 * In the left menu, click on "Domain Names".
@@ -63,20 +72,24 @@ Now that our domain is registered, let's configure transcoding templates:
 * Back to the [Transcode page](https://vod.console.aliyun.com/#/settings/transcode/list), we can see our
   "multiple-sizes" template group. Copy the value in the "ID" column (e.g. 46fdd77a0231241a5db0a105de540e81).
 
-We can now configure the application. Open the file `src/main/resources/application.properties` and set the following
-values:
+We can now configure the application. In the file `src/main/resources/application.properties`, the following
+properties will need to be set:
 ```properties
 # Apsara Video VOD
 apsaraVideoVod.accessKeyId=Access key ID you got when you have created your RAM user.
 apsaraVideoVod.accessKeySecret=Access key secret you got when you have created your RAM user.
-apsaraVideoVod.regionId=Region of VOD service (e.g. ap-southeast-1).
+apsaraVideoVod.regionId=Region of the VOD service (e.g. ap-southeast-1).
 apsaraVideoVod.templateGroupId=ID of your "multiple-sizes" template.
 ```
-> Note: You can obtain the region ID from [this page](https://www.alibabacloud.com/help/doc-detail/40654.htm).
+> Note 1: You can obtain the region ID from [this page](https://www.alibabacloud.com/help/doc-detail/40654.htm).
+
+> Note 2: If you don't want to modify the file `application.properties`, you can pass these parameters as
+> program arguments, as shown in the [next section](#compilation).
 
 ## Compilation
-In order to compile this demo, you need to have [JDK 11+](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
-and [Apache Maven 3.6+](https://maven.apache.org/download.cgi) on your machine.
+> Note: In order to compile this demo, you need to have
+> [JDK 11+](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
+> and [Apache Maven 3.6+](https://maven.apache.org/download.cgi) on your machine.
 
 Please open a terminal and enter the following commands:
 ```bash
@@ -92,7 +105,11 @@ mvn clean package
 If you want to run the application locally, run the following command:
 ```bash
 # Run the application locally
-mvn spring-boot:run
+mvn spring-boot:run \
+    -DapsaraVideoVod.accessKeyId=access-key-id-of-your-AliyunVoDFullAccess-ram-user \
+    -DapsaraVideoVod.accessKeySecret=access-key-secret-of-your-AliyunVoDFullAccess-ram-user \
+    -DapsaraVideoVod.regionId=vod-service-region-id \
+    -DapsaraVideoVod.templateGroupId=id-of-your-multiple-sizes-template
 ```
 You can then open the page [http://localhost:8080](http://localhost:8080) in your web browser.
 
@@ -102,10 +119,55 @@ You can then open the page [http://localhost:8080](http://localhost:8080) in you
 > [CORS Everywhere](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/).
 
 ## Installation
-TODO
+> Note 1: In order to deploy this demo in Alibaba Cloud, you need to [Terraform](https://www.terraform.io/) installed on
+> your computer.
+
+> Note 2: you need an [access key id and secret](https://www.alibabacloud.com/help/faq-detail/63482.htm) attached
+> to your main user account, or to a [RAM user](https://www.alibabacloud.com/help/doc-detail/57056.htm) with the
+> `AdministratorAccess` policy.
+
+> Note 3: your will need the identifier for your region (such as "ap-southeast-1"), please read
+> [this documentation](https://www.alibabacloud.com/help/doc-detail/40654.htm) to find it.
+
+Now that the application is packaged (file "target/vod-demo-x.y.z.jar"), we can deploy it in Alibaba Cloud with the
+following commands:
+```bash
+# Navigate to this project directory
+cd ~/projects/vod-demo
+
+# Navigate to the infrastructure directory, where Terraform scripts are located
+cd infrastructure
+
+# Configure the Terraform scripts
+export ALICLOUD_ACCESS_KEY="your-access-key-id"
+export ALICLOUD_SECRET_KEY="your-access-key-secret"
+export ALICLOUD_REGION="your-region-id" # e.g. "ap-southeast-1"
+
+export TF_VAR_top_domain_name="my-sample-domain.xyz"
+export TF_VAR_sub_domain_name="vod-demo"
+export TF_VAR_ecs_root_password="YourS3cretP@ssword"
+export TF_VAR_vod_service_access_key_id="Access key ID of your RAM user with the AliyunVoDFullAccess policy."
+export TF_VAR_vod_service_access_key_secret="Access key secret of your RAM user with the AliyunVoDFullAccess policy."
+export TF_VAR_vod_service_region_id="Region of the VOD service (e.g. ap-southeast-1)."
+export TF_VAR_vod_service_template_group_id="ID of the 'multiple-sizes' template."
+
+# Initialize and run terraform
+terraform init
+terraform apply
+```
+The Terraform script automatically installs the demo on the [ECS instance](https://www.alibabacloud.com/product/ecs).
+
+You can now test your application by opening your web browser on the domain you have configured
+(e.g. "http://demo-vod.my-sample-domain.xyz").
 
 ## Credits
+* [OpenJDK](https://openjdk.java.net/)
 * [Spring Boot](https://spring.io/projects/spring-boot)
 * [JQuery](https://jquery.com/)
 * [JavaScript upload SDK](https://www.alibabacloud.com/help/doc-detail/51992.htm)
 * [Web player SDK](https://www.alibabacloud.com/help/doc-detail/51991.htm)
+* [Apache Maven](https://maven.apache.org/download.cgi)
+* [Terraform](https://www.terraform.io/)
+
+## Support
+Don't hesitate to [contact us](mailto:projectdelivery@alibabacloud.com) if you have questions or remarks.

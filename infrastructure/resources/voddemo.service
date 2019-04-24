@@ -1,0 +1,17 @@
+[Unit]
+Description=voddemo
+After=syslog.target
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/java -Xmx1800m -jar /opt/voddemo/voddemo.jar --spring.config.location=file:/etc/voddemo/application.properties
+SuccessExitStatus=143
+TimeoutStopSec=10
+Restart=on-failure
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=voddemo
+
+[Install]
+WantedBy=multi-user.target
