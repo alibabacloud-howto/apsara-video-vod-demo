@@ -74,6 +74,33 @@ apsaraVideoVod.templateGroupId=ID of your "multiple-sizes" template.
 ```
 > Note: You can obtain the region ID from [this page](https://www.alibabacloud.com/help/doc-detail/40654.htm).
 
+## Compilation
+In order to compile this demo, you need to have [JDK 11+](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot)
+and [Apache Maven 3.6+](https://maven.apache.org/download.cgi) on your machine.
+
+Please open a terminal and enter the following commands:
+```bash
+# Navigate to this project directory
+cd ~/projects/vod-demo
+
+# Note: make sure you have configured src/main/resources/application.properties
+
+# Compile and package the application
+mvn clean package
+```
+
+If you want to run the application locally, run the following command:
+```bash
+# Run the application locally
+mvn spring-boot:run
+```
+You can then open the page [http://localhost:8080](http://localhost:8080) in your web browser.
+
+> Note: you will have [CORS issues](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) because the web
+> application domain ("localhost") is different from the one used for VOD
+> (e.g. "vod.my-sample-domain.xyz"). A quick solution is to use a web browser add-on, such as
+> [CORS Everywhere](https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/).
+
 ## Installation
 TODO
 
