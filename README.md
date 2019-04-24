@@ -166,6 +166,7 @@ You can now test your application by opening your web browser on the domain you 
 * [JQuery](https://jquery.com/)
 * [JavaScript upload SDK](https://www.alibabacloud.com/help/doc-detail/51992.htm)
 * [Web player SDK](https://www.alibabacloud.com/help/doc-detail/51991.htm)
+* [Bootstrap](https://getbootstrap.com/)
 * [Apache Maven](https://maven.apache.org/download.cgi)
 * [Terraform](https://www.terraform.io/)
 

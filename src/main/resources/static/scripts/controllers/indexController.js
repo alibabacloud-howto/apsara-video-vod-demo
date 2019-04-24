@@ -25,7 +25,15 @@ const indexController = {
             return false;
         });
 
+        $('#upload-modal').on('show.bs.modal', () => {
+            this.resetUploadForm();
+        });
+
         $('#upload-video-form').on('submit', () => {
+            return false;
+        });
+
+        $('#upload-video').on('click', () => {
             this.onVideoUpload();
             return false;
         });
@@ -44,6 +52,41 @@ const indexController = {
                 this.deleteVideo($target.attr('data-attr-video-id'));
             }
         });
+    },
+
+    resetUploadForm() {
+        const $status = $('#upload-video-status');
+        const $file = $('#upload-video-file');
+        const $title = $('#upload-video-title');
+        const $description = $('#upload-video-description');
+        const $uploadVideo = $('#upload-video');
+        const $closeUploadModel = $('#close-upload-modal');
+
+        $status.text('');
+        $file.val('');
+        $title.val('');
+        $description.val('');
+        this._selectedFile = null;
+
+        $file.prop('disabled', false);
+        $title.prop('disabled', false);
+        $description.prop('disabled', false);
+        $uploadVideo.prop('disabled', false);
+        $closeUploadModel.prop('disabled', false);
+    },
+
+    disableUploadForm() {
+        const $file = $('#upload-video-file');
+        const $title = $('#upload-video-title');
+        const $description = $('#upload-video-description');
+        const $uploadVideo = $('#upload-video');
+        const $closeUploadModel = $('#close-upload-modal');
+
+        $file.prop('disabled', true);
+        $title.prop('disabled', true);
+        $description.prop('disabled', true);
+        $uploadVideo.prop('disabled', true);
+        $closeUploadModel.prop('disabled', true);
     },
 
     /**
@@ -76,7 +119,6 @@ const indexController = {
      */
     async onVideoUpload() {
         const $status = $('#upload-video-status');
-        const $file = $('#upload-video-file');
         const $title = $('#upload-video-title');
         const $description = $('#upload-video-description');
 
@@ -92,10 +134,7 @@ const indexController = {
 
         // Prepare the video upload in order to obtain the destination URL
         $status.text('Uploading...');
-        $file.prop('disabled', true);
-        $title.prop('disabled', true);
-        $title.prop('disabled', true);
-        $description.prop('disabled', true);
+        this.disableUploadForm();
         const uploadableVideo = new UploadableVideo(title, this._selectedFile.name, this._selectedFile.size, description);
         const videoUploadDestination = await videosService.prepareVideoUpload(uploadableVideo);
 
@@ -103,17 +142,8 @@ const indexController = {
         await videosService.uploadVideo(videoUploadDestination, this._selectedFile, progressPercentage => {
             $status.text(`Uploading (${Math.ceil(progressPercentage * 100)}%)...`);
         });
+        this.resetUploadForm();
         $status.text('Video uploaded with success!');
-
-        // Reset the form
-        $title.val('');
-        $description.val('');
-        $file.val('');
-        this._selectedFile = null;
-        $file.prop('disabled', false);
-        $title.prop('disabled', false);
-        $title.prop('disabled', false);
-        $description.prop('disabled', false);
     },
 
     /**
