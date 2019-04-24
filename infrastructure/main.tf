@@ -134,7 +134,10 @@ resource "alicloud_eip_association" "voddemo_eip_association" {
       user = "root"
       password = "${var.ecs_root_password}"
     }
-    inline = "/tmp/install_voddemo.sh '${var.vod_service_access_key_id}}' '${var.vod_service_access_key_secret}}' '${var.vod_service_region_id}}' '${var.vod_service_template_group_id}}'"
+    inline = [
+      "chmod +x /tmp/install_voddemo.sh",
+      "/tmp/install_voddemo.sh '${var.vod_service_access_key_id}}' '${var.vod_service_access_key_secret}}' '${var.vod_service_region_id}}' '${var.vod_service_template_group_id}}'"
+    ]
   }
 }
 

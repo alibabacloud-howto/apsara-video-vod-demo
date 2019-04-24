@@ -33,10 +33,10 @@ apt-get -y install nginx
 
 # Configure the VOD demo
 echo "Configure the VOD demo"
-ESCAPED_VOD_SERVICE_ACCESS_KEY_ID==$(echo ${VOD_SERVICE_ACCESS_KEY_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
-ESCAPED_VOD_SERVICE_ACCESS_KEY_SECRET==$(echo ${VOD_SERVICE_ACCESS_KEY_SECRET} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
-ESCAPED_VOD_SERVICE_REGION_ID==$(echo ${VOD_SERVICE_REGION_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
-ESCAPED_VOD_SERVICE_TEMPLATE_GROUP_ID==$(echo ${VOD_SERVICE_TEMPLATE_GROUP_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
+ESCAPED_VOD_SERVICE_ACCESS_KEY_ID=$(echo ${VOD_SERVICE_ACCESS_KEY_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
+ESCAPED_VOD_SERVICE_ACCESS_KEY_SECRET=$(echo ${VOD_SERVICE_ACCESS_KEY_SECRET} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
+ESCAPED_VOD_SERVICE_REGION_ID=$(echo ${VOD_SERVICE_REGION_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
+ESCAPED_VOD_SERVICE_TEMPLATE_GROUP_ID=$(echo ${VOD_SERVICE_TEMPLATE_GROUP_ID} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')
 sed -i "s/\(apsaraVideoVod\.accessKeyId=\).*\$/\1${ESCAPED_VOD_SERVICE_ACCESS_KEY_ID}/" /tmp/application.properties
 sed -i "s/\(apsaraVideoVod\.accessKeySecret=\).*\$/\1${ESCAPED_VOD_SERVICE_ACCESS_KEY_SECRET}/" /tmp/application.properties
 sed -i "s/\(apsaraVideoVod\.regionId=\).*\$/\1${ESCAPED_VOD_SERVICE_REGION_ID}/" /tmp/application.properties
