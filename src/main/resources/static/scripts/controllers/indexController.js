@@ -180,6 +180,11 @@ const indexController = {
         });
     },
 
+    /**
+     * Ask confirmation and delete the given video.
+     *
+     * @param {string} videoId
+     */
     async deleteVideo(videoId) {
         const response = confirm("Are you sure you want to delete this video?");
         if (response) {
