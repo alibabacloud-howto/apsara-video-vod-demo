@@ -79,7 +79,7 @@ public class VideosController {
      */
     @RequestMapping("/videos")
     public ResponseEntity<List<Video>> findAllVideos() {
-        LOGGER.info("Finding the last 100 videos...");
+        LOGGER.debug("Finding the last 100 videos...");
 
         var client = new DefaultAcsClient(clientProfile);
         var request = new GetVideoListRequest();
@@ -115,7 +115,7 @@ public class VideosController {
      */
     @RequestMapping("/videos/{videoId}/play-urls")
     public ResponseEntity<List<VideoPlayUrl>> getVideoPlayUrls(@PathVariable("videoId") String videoId) {
-        LOGGER.info("Get play URLs for the video " + videoId + "...");
+        LOGGER.debug("Get play URLs for the video " + videoId + "...");
 
         var client = new DefaultAcsClient(clientProfile);
         var request = new GetPlayInfoRequest();
